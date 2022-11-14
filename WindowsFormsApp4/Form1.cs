@@ -79,7 +79,9 @@ namespace WindowsFormsApp4
 
         private void Form1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            string s = contentsOfFile().Replace('\n', ' ');
+            string s = contentsOfFile().Replace('\n', ' '); //По идее в этой строчке
+            // считанные текс превращается в одну строку, но в форму всё равно выводится так как файле.
+            // Что я делаю не так? 
             labelResolution.Text = s;
         }
     }
