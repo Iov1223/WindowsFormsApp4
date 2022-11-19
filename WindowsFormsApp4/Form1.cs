@@ -13,43 +13,35 @@ namespace WindowsFormsApp4
 {
     public partial class Form1 : Form
     {
+        Timer timer = new Timer();
         public Form1()
         {
             InitializeComponent();
-            Timer timer = new Timer();
-            timer.Interval = 500;
-            timer.Enabled = true;
+            timer.Interval = 15;
+            timer.Enabled = false;
             timer.Tick += new EventHandler(timer1_Tick);
         }
         private void SizeForm()
         {
             var actualSize = SystemInformation.PrimaryMonitorMaximizedWindowSize;
-            actualSize.Width /= 4;
-            actualSize.Height /= 4;
+            actualSize.Width /= 3;
+            actualSize.Height /= 3;
             MinimumSize = new Size(actualSize.Width, actualSize.Height);
             MaximumSize = new Size(actualSize.Width, actualSize.Height);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var actualSize = SystemInformation.PrimaryMonitorMaximizedWindowSize;
-            labelResolution.Text = $"Активная область: \n" +
-                $"Ширина = {actualSize.Width}, высота = {actualSize.Height}";
-        }
-
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
-        {
             SizeForm();
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             
             if (labelResolution.Left > -labelResolution.Width)
             {
-                labelResolution.Left -= 5;
-            }  
-            else 
+                labelResolution.Left -= 1;
+            }
+            else
             {
                 labelResolution.Left = this.Width;
             }
@@ -79,10 +71,38 @@ namespace WindowsFormsApp4
 
         private void Form1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            string s = contentsOfFile().Replace('\n', ' '); //По идее в этой строчке
-            // считанные текс превращается в одну строку, но в форму всё равно выводится так как файле.
-            // Что я делаю не так? 
-            labelResolution.Text = s;
+            labelResolution.Text = contentsOfFile().Replace("\r\n", " ");
+        }
+
+        private void buttonClose_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void buttonOpenFile_MouseClick(object sender, MouseEventArgs e)
+        {   
+            labelResolution.Text = contentsOfFile().Replace("\r\n", " ");
+            timer.Enabled = true;
+        }
+
+        private void buttonChange_MouseClick(object sender, MouseEventArgs e)
+        {
+            var height = this.Height;
+            var width = this.Width; 
+            System.Drawing.Drawing2D.GraphicsPath Form_Path = 
+                new System.Drawing.Drawing2D.GraphicsPath();
+            Form_Path.AddPolygon(new Point[]
+            {
+                new Point(0, 0),
+                new Point(width, 0),
+                new Point(width / 2, height / 2),
+                new Point(width, height),
+                new Point(0, height),
+                new Point(width / 2, height / 2),
+            });
+            
+            Region Form_Region = new Region(Form_Path);
+            this.Region = Form_Region;
         }
     }
 }
